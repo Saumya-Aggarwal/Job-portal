@@ -1,9 +1,4 @@
 import bcrypt from "bcryptjs";
-import {
-  validateRequest,
-  signInSchema,
-  signupSchema,
-} from "../utils/validation";
 import UserModel from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 export const register = async (req, res) => {
@@ -104,17 +99,34 @@ export const logout = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({
-        success: false,
-        message: "Internal server error.",
-        error: error.message,
-      });
+      success: false,
+      message: "Internal server error.",
+      error: error.message,
+    });
   }
 };
 
-export const updateProfile = async (req, res)=>{
-    try {
-      
-    } catch (error) {
-        
+export const updateProfile = async (req, res) => {
+  try {
+    const userId = req.cookies.userId;
+    if (!userId) {
+      return res
+        .status(400)
+        .json({ success: false, message: "User ID not found in cookies" });
     }
-}
+    const updateData = req.body;
+    // Find user by ID and update with new data
+    const updatedUser = await UserModel.findByIdAndUpdate(userId, updateData, {
+      new: true, // Return the updated document
+      runValidators: true, // Ensure validation rules are applied
+    });
+    if (!updatedUser) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+    res.status(200).json({ success: true, data: updatedUser });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server error", error });
+  }
+};

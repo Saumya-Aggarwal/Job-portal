@@ -1,4 +1,4 @@
-const { z } = require("zod");
+import z from "zod";
 const signupSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z
@@ -49,9 +49,4 @@ const validateRequest = (Schema) => {
   };
 };
 
-module.exports = {
-  validateRequest,
-  signInSchema,
-  signupSchema,
-  profileSchema,
-};
+export { validateRequest, signInSchema, signupSchema, profileSchema };

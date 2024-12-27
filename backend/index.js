@@ -3,6 +3,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import connectDB from "./utils/db.js";
 import dotenv from "dotenv";
+import userRouter from "./routes/user.routes.js";
 dotenv.config({});
 const app = express();
 const corsOptions = {
@@ -15,9 +16,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors(corsOptions));
 const PORT = 3000;
-app.use("/jobs", jobsRouter);
+// app.use("/jobs", jobsRouter);
 app.use("/user", userRouter);
-app.use("/company", companypRouter);
+// app.use("/company", companyRouter);
 
 (async () => {
   await connectDB();

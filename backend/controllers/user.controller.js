@@ -109,7 +109,7 @@ export const updateProfile = async (req, res) => {
   try {
     const userId = req.user;
     const { fullName, email, password, phoneNumber, profile } = req.body;
-
+    
     if (profile && typeof profile.skills === "string") {
       profile.skills = profile.skills.split(",").map((skill) => skill.trim());
     }

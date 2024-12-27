@@ -12,7 +12,6 @@ const corsOptions = {
 };
 
 //middleware
-// Correct middleware setup
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -20,7 +19,7 @@ app.use(cors(corsOptions));
 const PORT = 8000;
 // app.use("/jobs", jobsRouter);
 app.use("/user", userRouter);
-// app.use("/company", companyRouter);
+app.use("/company", companyRouter);
 
 (async () => {
   await connectDB();

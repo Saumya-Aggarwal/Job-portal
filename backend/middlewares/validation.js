@@ -39,18 +39,33 @@ const updateProfileSchema = z.object({
   profile: z
     .object({
       bio: z.string().optional(),
-      skills: z.union([z.string(), z.array(z.string())]).optional(), 
+      skills: z.union([z.string(), z.array(z.string())]).optional(),
       resume: z.string().optional(),
       resumeOriginalName: z.string().optional(),
       company: z.string().optional(),
-      image: z.string().optional().default(""),
+      Image: z.string().optional().default(""),
     })
     .optional(),
 });
 
+const companySchema = z.object({
+  name: z.string().min(1, "Please enter Company Email."),
+  website: z.string().optional(),
+  description: z.string().optional(),
+  location: z.string().optional(),
+  logo: z.string().optional(),
+});
+
+const updateCompanySchema = z.object({
+  website: z.string().optional(),
+  description: z.string().optional(),
+  location: z.string().optional(),
+  logo: z.string().optional(),
+});
 const validateRequest = (Schema) => {
   //a function that return a function
   return (req, res, next) => {
+    console.log(req.body);
     const validationResult = Schema.safeParse(req.body);
     if (!validationResult.success) {
       return res.status(400).json({
@@ -64,4 +79,10 @@ const validateRequest = (Schema) => {
   };
 };
 
-export { validateRequest, signInSchema, signupSchema, updateProfileSchema };
+export {
+  validateRequest,
+  signInSchema,
+  signupSchema,
+  updateProfileSchema,
+  companySchema,
+};

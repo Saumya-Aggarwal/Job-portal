@@ -34,7 +34,6 @@ export const register = async (req, res) => {
         error: error.message,
       });
     }
-
     // Handle general server errors
     res.status(500).json({
       success: false,
@@ -74,7 +73,7 @@ export const login = async (req, res) => {
       .status(200)
       .cookie("token", token, {
         maxAge: 1 * 24 * 60 * 60 * 1000,
-        httpsOnly: true,
+        httpOnly: true,
         sameSite: "strict",
       })
       .json({
@@ -108,13 +107,13 @@ export const logout = async (req, res) => {
 
 export const updateProfile = async (req, res) => {
   try {
-    const userId = req.cookies.userId;
-    if (!userId) {
-      return res
-        .status(400)
-        .json({ success: false, message: "User ID not found in cookies" });
+    const userId = req.user;
+    const { fullName, email, password, phoneNumber, profile } = req.body;
+
+    if (profile && typeof profile.skills === "string") {
+      profile.skills = profile.skills.split(",").map((skill) => skill.trim());
     }
-    const updateData = req.body;
+    const updateData = { fullName, email, password, phoneNumber, profile };
     // Find user by ID and update with new data
     const updatedUser = await UserModel.findByIdAndUpdate(userId, updateData, {
       new: true, // Return the updated document
@@ -123,7 +122,7 @@ export const updateProfile = async (req, res) => {
     if (!updatedUser) {
       return res
         .status(404)
-        .json({ success: false, message: "User not found" });
+        .json({ success: false, message: "User not found " });
     }
     res.status(200).json({ success: true, data: updatedUser });
   } catch (error) {

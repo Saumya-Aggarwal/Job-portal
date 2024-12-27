@@ -22,6 +22,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: ["applicant", "recruiter"],
       required: true,
+      immutable: true, // Makes the role field immutable
     },
     profile: {
       bio: {
@@ -39,15 +40,6 @@ const userSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
-// Pre-save middleware to handle the skills input
-userSchema.pre("save", function (next) {
-  if (typeof this.profile.skills === "string") {
-    this.profile.skills = this.profile.skills
-      .split(",")
-      .map((skill) => skill.trim());
-  }
-  next();
-});
 
 const UserModel = mongoose.model("User", userSchema);
 export default UserModel;

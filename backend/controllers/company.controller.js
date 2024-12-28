@@ -1,4 +1,4 @@
-import CompanyModel from "../models/company.model";
+import CompanyModel from "../models/company.model.js";
 
 export const registerCompany = async (req, res) => {
   try {
@@ -24,11 +24,13 @@ export const registerCompany = async (req, res) => {
       return res.status(401).json({
         message: "Cannot create Company",
         success: false,
+        company,
       });
     }
     return res.status(201).json({
       message: "company created",
       success: true,
+      company,
     });
   } catch (e) {
     return res.status(400).json({
@@ -42,12 +44,12 @@ export const registerCompany = async (req, res) => {
 export const getCompanies = async (req, res) => {
   try {
     const userId = req.user;
-    const companies = await CompanyModel.find({
-      userId,
-    });
+
+    const companies = await CompanyModel.find({ userId });
+    console.log(companies);
     if (!companies || companies.length === 0) {
       return res.status(404).json({
-        message: "Company not found",
+        message: "U have not created any company",
         success: false,
       });
     }
@@ -67,21 +69,21 @@ export const getCompanies = async (req, res) => {
 export const getCompanyById = async (req, res) => {
   try {
     const companyId = req.params.id;
-    const company = await CompanyModel.findById({
-      companyId,
-    });
+    const company = await CompanyModel.findById(companyId); // Pass companyId directly
+
     if (!company) {
       return res.status(404).json({
         message: "Company not found",
         success: false,
       });
     }
+
     return res.status(200).json({
       company,
       success: true,
     });
-  } catch (error) {
-    return res.status(400).json({
+  } catch (e) {
+    return res.status(500).json({
       message: "Internal server error",
       success: false,
       error: e.message,
@@ -92,9 +94,7 @@ export const getCompanyById = async (req, res) => {
 export const deleteCompany = async (req, res) => {
   try {
     const companyId = req.params.id;
-    const company = await CompanyModel.findByIdAndDelete({
-      companyId,
-    });
+    const company = await CompanyModel.findByIdAndDelete(companyId);
     if (!company) {
       return res.status(404).json({
         message: "Company not found",
@@ -102,10 +102,11 @@ export const deleteCompany = async (req, res) => {
       });
     }
     return res.status(200).json({
-      message: "Company deleted : " + company,
+      message: "Company deleted : ",
+      company,
       success: true,
     });
-  } catch (error) {
+  } catch (e) {
     return res.status(400).json({
       message: "Internal server error",
       success: false,
@@ -124,14 +125,13 @@ export const updateCompany = async (req, res) => {
       updatedData,
       { new: true, runValidators: true }
     );
-    if (!updateCompany) {
-        return res
-          .status(404)
-          .json({ success: false, message: "company not found " });
-      }
-      res.status(200).json({ success: true, updateCompany });
-    } catch (error) {
-      res.status(500).json({ success: false, message: "Server error", error });
+    if (!updatedCompany) {
+      return res
+        .status(404)
+        .json({ success: false, message: "company not found " });
     }
-  };
-  
+    res.status(200).json({ success: true, updatedCompany });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server error", error });
+  }
+};

@@ -2,7 +2,7 @@ import {
   companySchema,
   updateCompanySchema,
   validateRequest,
-} from "../middlewares/validation";
+} from "../middlewares/validation.js";
 import express from "express";
 import isAuthenticated from "../middlewares/auth.js";
 import isRecruiter from "../middlewares/recruiterAuth.js";
@@ -30,8 +30,8 @@ companyRouter.put(
   validateRequest(updateCompanySchema),
   updateCompany
 );
+companyRouter.get("/all", getCompanies);
 companyRouter.delete("/delete/:id", deleteCompany);
 companyRouter.get("/:id", getCompanyById);
-companyRouter.get("/all", getCompanies);
 
 export default companyRouter;

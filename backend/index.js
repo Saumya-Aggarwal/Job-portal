@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import connectDB from "./utils/db.js";
 import dotenv from "dotenv";
 import userRouter from "./routes/user.routes.js";
+import companyRouter from "./routes/company.routes.js";
 dotenv.config({});
 const app = express();
 const corsOptions = {

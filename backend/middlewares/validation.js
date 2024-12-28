@@ -65,7 +65,6 @@ const updateCompanySchema = z.object({
 const validateRequest = (Schema) => {
   //a function that return a function
   return (req, res, next) => {
-    console.log(req.body);
     const validationResult = Schema.safeParse(req.body);
     if (!validationResult.success) {
       return res.status(400).json({
@@ -85,4 +84,5 @@ export {
   signupSchema,
   updateProfileSchema,
   companySchema,
+  updateCompanySchema
 };

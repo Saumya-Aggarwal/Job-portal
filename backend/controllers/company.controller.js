@@ -46,7 +46,6 @@ export const getCompanies = async (req, res) => {
     const userId = req.user;
 
     const companies = await CompanyModel.find({ userId });
-    console.log(companies);
     if (!companies || companies.length === 0) {
       return res.status(404).json({
         message: "U have not created any company",
@@ -57,7 +56,7 @@ export const getCompanies = async (req, res) => {
       companies,
       success: true,
     });
-  } catch (error) {
+  } catch (e) {
     return res.status(400).json({
       message: "Internal server error",
       success: false,

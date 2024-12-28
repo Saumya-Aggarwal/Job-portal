@@ -5,6 +5,7 @@ export const register = async (req, res) => {
   try {
     const { fullName, email, password, phoneNumber, role } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
+    console.log(hashedPassword);
     const user = await UserModel.create({
       fullName,
       email,

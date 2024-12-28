@@ -5,7 +5,7 @@ const jobSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    descriptions: {
+    description: {
       type: String,
       required: true,
     },
@@ -13,11 +13,10 @@ const jobSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    requirements: [
-      {
-        type: String,
-      },
-    ],
+    requirements: {
+      type: [String], // Array of strings
+      required: true,
+    },
     location: {
       type: String,
       required: true,
@@ -26,7 +25,7 @@ const jobSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    positions: {
+    position: {
       type: Number,
       required: true,
     },
@@ -44,9 +43,13 @@ const jobSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "Application",
     },
+    experience: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );
 
-const jobModel = mongoose.model("Job", jobSchema);
-export default jobModel;
+const JobModel = mongoose.model("Job", jobSchema);
+export default JobModel;

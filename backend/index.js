@@ -6,6 +6,7 @@ import dotenv from "dotenv";
 import userRouter from "./routes/user.routes.js";
 import companyRouter from "./routes/company.routes.js";
 import jobRouter from "./routes/job.routes.js";
+import applicationRouter from "./routes/application.routes.js";
 dotenv.config({});
 const app = express();
 const corsOptions = {
@@ -19,6 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors(corsOptions));
 const PORT = 8000;
+app.use("/application", applicationRouter);
 app.use("/job", jobRouter);
 app.use("/user", userRouter);
 app.use("/company", companyRouter);

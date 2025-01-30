@@ -13,6 +13,7 @@ const validateRequest = (Schema) => {
   //a function that return a function
   return (req, res, next) => {
     const validationResult = Schema.safeParse(req.body);
+    console.log(req.body);
     if (!validationResult.success) {
       return res.status(400).json({
         success: false,

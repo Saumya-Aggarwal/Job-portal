@@ -1,149 +1,199 @@
-import React, { useState } from "react";
-import Navbar from "../components/shared/Navbar";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Link, useNavigate } from "react-router-dom";
+import Navbar from "../components/shared/Navbar";
+import { USER_API_END_POINT } from "../utils/const";
+import axios from "axios";
+import React from "react";
+import { toast } from "sonner";
 
 function SignUp() {
-  const [form, setForm] = useState({
-    fullName: "",
-    email: "",
-    phone: "",
-    password: "",
-    role: "applicant",
+  const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      role: "applicant",
+    },
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Form Data:", form);
-    // Add registration logic here (e.g., API call)
-  };
-
+  const onSubmit = async (data) => {
+    const formData = new FormData();
+  
+    // Convert phone number to integer if it's valid
+    if (data.phoneNumber) {
+      const trimmedPhoneNumber = data.phoneNumber.trim(); // Trim spaces
+      const phoneNumberInt = parseInt(trimmedPhoneNumber, 10);
+      if (!isNaN(phoneNumberInt)) {
+        data.phoneNumber = phoneNumberInt;
+      } else {
+        console.log("Invalid phone number");
+      }
+    }
+  
+    Object.keys(data).forEach((key) => {
+      // Check if profileImage exists and append it, otherwise append null
+      if (key === "profileImage") {
+        if (data[key]?.[0]) {
+          formData.append(key, data[key][0]);  // Append the file if it exists
+        } else {
+          formData.append(key, null);  // Append null if no file is selected
+        }
+      } else {
+        formData.append(key, data[key] || ""); // Append other fields as usual
+      }
+    });
+    try {
+      const res = await axios.post(`${USER_API_END_POINT}/register`, formData, {
+        withCredentials: true,
+      });
+      console.log("Response:", res.data);
+      if (res.data.success) {
+        toast.success(res.data.message);
+        navigate("/login");
+      }
+    } catch (err) {
+      console.log(err);
+      if (err.response && err.response.data.errors) {
+        const errorMessages = err.response.data.errors
+          .map((error) => error.message)
+          .join(", ");
+        toast.error(errorMessages);
+      } else {
+        toast.error(err.response.data.message);
+      }
+    }
+  };7
+  
+  
+  
   return (
     <>
-      <Navbar></Navbar>
-      {/* <div className=" max-w-7xl mx-auto ">
-        <form
-          action=""
-          className="mt-20 w-1/2 border mx-auto border-gray-200 rounded-md p-5"
-        >
-          <h1 className="font-bold text-2xl ">SignUp</h1>
-          <hr className="mt-1 mb-5" />
-          <div >
-            <Label className="text-md">Full Name</Label>
-            <Input className="mt-1" type="text" placeholder="Full Name" />
-          </div>
-          <div className="my-2">
-            <Label className="text-md">Email</Label>
-            <Input className="mt-1" type="Email" placeholder="Email" />
-          </div>
-          <div className="my-2">
-            <Label className="text-md">Phone Number</Label>
-            <Input className="mt-1" type="number" placeholder="Phone Number" />
-          </div>
-        </form>
-      </div> */}
+      <Navbar />
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
         <form
-          onSubmit={handleSubmit}
-          className="bg-white p-8 shadow-md rounded-lg max-w-md w-full space-y-6"
+          onSubmit={handleSubmit(onSubmit)}
+          className="bg-white p-8 shadow-md rounded-lg max-w-md w-full space-y-6 my-20"
         >
           <div className="text-center">
             <h1 className="text-2xl font-semibold text-gray-800">Register</h1>
-            <div className="mt-2 border-t-2 border-gray-200  mx-auto"></div>
+            <div className="mt-2 border-t-2 border-gray-200 mx-auto"></div>
           </div>
-          {/* Full Name */}
+
           <div className="space-y-2">
             <Label htmlFor="fullName">Full Name</Label>
             <Input
               type="text"
-              name="fullName"
               id="fullName"
-              value={form.fullName}
-              onChange={handleChange}
               placeholder="Enter your full name"
-              required
+              {...register("fullName", { required: "Full Name is required" })}
             />
+            {errors.fullName && (
+              <span className="text-red-500 text-sm">
+                {errors.fullName.message}
+              </span>
+            )}
           </div>
 
-          {/* Email */}
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
               type="email"
-              name="email"
               id="email"
-              value={form.email}
-              onChange={handleChange}
               placeholder="Enter your email"
-              required
+              {...register("email", { required: "Email is required" })}
             />
+            {errors.email && (
+              <span className="text-red-500 text-sm">
+                {errors.email.message}
+              </span>
+            )}
           </div>
 
-          {/* Phone Number */}
           <div className="space-y-2">
-            <Label htmlFor="phone">Phone Number</Label>
+            <Label htmlFor="phoneNumber">Phone</Label>
             <Input
               type="tel"
-              name="phone"
-              id="phone"
-              value={form.phone}
-              onChange={handleChange}
+              id="phoneNumber"
               placeholder="Enter your phone number"
-              required
+              {...register("phoneNumber", { required: "Phone is required" })}
             />
+            {errors.phone && (
+              <span className="text-red-500 text-sm">
+                {errors.phone.message}
+              </span>
+            )}
           </div>
 
-          {/* Password */}
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
             <Input
               type="password"
-              name="password"
               id="password"
-              value={form.password}
-              onChange={handleChange}
               placeholder="Enter your password"
-              required
+              {...register("password", { required: "Password is required" })}
             />
+            {errors.password && (
+              <span className="text-red-500 text-sm">
+                {errors.password.message}
+              </span>
+            )}
           </div>
 
-          {/* Role */}
           <div className="space-y-2">
+            <Label htmlFor="profileImage">Profile Image</Label>
+            <Input
+              type="file"
+              id="profileImage"
+              accept="image/*"
+              {...register("profileImage")}
+            />
+            {errors.profileImage && (
+              <span className="text-red-500 text-sm">
+                {errors.profileImage.message}
+              </span>
+            )}
+          </div>
+
+          <div>
             <Label>Role</Label>
             <div className="flex items-center space-x-4">
               <label className="flex items-center space-x-2">
                 <Input
                   type="radio"
-                  name="role"
                   value="applicant"
-                  checked={form.role === "applicant"}
-                  onChange={handleChange}
+                  {...register("role", { required: true })}
                 />
                 <span>Applicant</span>
               </label>
               <label className="flex items-center space-x-2">
                 <Input
                   type="radio"
-                  name="role"
                   value="recruiter"
-                  checked={form.role === "recruiter"}
-                  onChange={handleChange}
+                  {...register("role", { required: true })}
                 />
                 <span>Recruiter</span>
               </label>
             </div>
           </div>
 
-          {/* Submit Button */}
-          <Button type="submit" className="w-full">
+          <Button
+            type="submit"
+            className="bg-[#6A38C2] hover:bg-[#522b95] w-full"
+          >
             Register
           </Button>
+          <span className="text-sm">
+            Already have an Account?{" "}
+            <Link to={"/login"} className="text-blue-500">
+              Login
+            </Link>
+          </span>
         </form>
       </div>
     </>

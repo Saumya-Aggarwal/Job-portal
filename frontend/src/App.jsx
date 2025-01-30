@@ -2,11 +2,16 @@ import Login from "./auth/Login";
 import SignUp from "./auth/SignUp";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./pages/Home";
+
 function App() {
   const router = createBrowserRouter([
     {
-      path: "/",
-      element: <Home/>,
+      path: "/", // Root path
+      element: <Home />,
+    },
+    {
+      path: "/home", // Home path
+      element: <Home />,
     },
     {
       path: "/login",
@@ -17,10 +22,10 @@ function App() {
       element: <SignUp />,
     },
   ]);
+
   return (
     <>
-      <RouterProvider router={router}>
-      </RouterProvider>
+      <RouterProvider router={router} />
     </>
   );
 }

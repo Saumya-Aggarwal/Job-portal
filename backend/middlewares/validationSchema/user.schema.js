@@ -8,9 +8,12 @@ export const signupSchema = z.object({
     .regex(/[A-Z]/, "Password must contain at least one uppercase letter") // Requires at least one uppercase letter
     .regex(/[a-z]/, "Password must contain at least one lowercase letter") // Requires at least one lowercase letter
     .regex(/[0-9]/, "Password must contain at least one number"), // Requires at least one digit
-  phoneNumber: z.number().refine((val) => val.toString().length === 10, {
-    message: "Phone number must be exactly 10 digits",
-  }),
+  phoneNumber: z
+    .string()
+    .transform((val) => parseInt(val, 10)) // Convert the string to a number
+    .refine((val) => !isNaN(val), {
+      message: "Invalid phone number",
+    }),
   role: z.enum(["applicant", "recruiter"], "Invalid role type"),
 });
 

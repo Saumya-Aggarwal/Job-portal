@@ -8,9 +8,14 @@ import { USER_API_END_POINT } from "../utils/const";
 import axios from "axios";
 import React from "react";
 import { toast } from "sonner";
-
+import { Loader2 } from "lucide-react";
+import { setLoading } from "../store/authSlice";
+import { useDispatch, useSelector } from "react-redux";
 function SignUp() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { loading } = useSelector((store) => store.auth);
+
   const {
     register,
     handleSubmit,
@@ -49,6 +54,7 @@ function SignUp() {
       }
     });
     try {
+      dispatch(setLoading(true));
       const res = await axios.post(`${USER_API_END_POINT}/register`, formData, {
         withCredentials: true,
       });
@@ -67,8 +73,10 @@ function SignUp() {
       } else {
         toast.error(err.response.data.message);
       }
+    }finally{
+      dispatch(setLoading(false));
     }
-  };7
+  };
   
   
   
@@ -182,12 +190,20 @@ function SignUp() {
             </div>
           </div>
 
-          <Button
-            type="submit"
-            className="bg-[#6A38C2] hover:bg-[#522b95] w-full"
-          >
-            Register
-          </Button>
+          {loading ? (
+            <Button className = "bg-[#6A38C2] hover:bg-[#522b95] w-full">
+              <Loader2 className="mr-2 h-4 w-4 animate-spin "></Loader2>
+            </Button>
+          ) : (
+            <Button
+              type="submit"
+              className="bg-[#6A38C2] hover:bg-[#522b95] w-full"
+            >
+              Login
+            </Button>
+          )}
+
+
           <span className="text-sm">
             Already have an Account?{" "}
             <Link to={"/login"} className="text-blue-500">

@@ -1,11 +1,15 @@
 import React from "react";
-import Navbar from "../components/shared/Navbar";
+import CategoryCarousel from "../components/shared/CategoryCarousel";
+import LatestJob from "../components/shared/LatestJob";
+import HeroSection from "../components/shared/HeroSection";
+
 
 function Home() {
   return (
     <>
-      <Navbar></Navbar>
-      
+      <HeroSection/>
+      <CategoryCarousel/>
+      <LatestJob/>
     </>
   );
 }

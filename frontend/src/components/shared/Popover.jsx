@@ -8,12 +8,13 @@ import {
 import { Button } from "@/components/ui/button";
 import { FaUser } from "react-icons/fa";
 import { IoLogOut } from "react-icons/io5";
+import { Link } from "react-router-dom";
 function LoggedUser() {
   return (
     <ul className="flex gap-5 font-medium items-center">
-      <li>Home</li>
-      <li>Jobs</li>
-      <li>Browse </li>
+      <Link to={"/home"}><li>Home</li></Link>
+      <Link to={"/jobs"}><li>Jobs</li></Link>
+      <Link to={"/browse"}><li>Browse</li></Link>
       <Popover>
         <PopoverTrigger>
           <Avatar className="ms-6">

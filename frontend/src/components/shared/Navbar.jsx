@@ -2,10 +2,10 @@ import React, { useEffect, useState } from "react";
 import LoggedUser from "./Popover";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 function Navbar() {
-  const user = true;
-
+  const {user} = useSelector((store) => store.auth);
   // State to track if the navbar should be visible
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -34,7 +34,7 @@ function Navbar() {
   return (
     <>
       <div
-        className={`fixed top-0 left-0 w-full transition-transform duration-300 bg-white shadow-md ${
+        className={`fixed top-0 left-0 w-full transition-transform duration-300 bg-white shadow-md z-10 ${
           isVisible ? "translate-y-0" : "-translate-y-full"
         }`}
       >

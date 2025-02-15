@@ -13,11 +13,11 @@ import {
   updateProfile,
 } from "../controllers/user.controller.js";
 import isAuthenticated from "../middlewares/auth.js";
-import { singleUpload } from "../middlewares/multer.js";
+import {  uploadMiddleware } from "../middlewares/multer.js";
 // Correctly pass the function references
 userRouter.post(
   "/register",
-  singleUpload,
+  uploadMiddleware,
   validateRequest(signupSchema),
   register
 );
@@ -25,10 +25,9 @@ userRouter.post("/login", validateRequest(signInSchema), login);
 userRouter.post("/logout", logout);
 userRouter.put(
   "/profile",
-  singleUpload,
+  uploadMiddleware,
   validateRequest(updateProfileSchema),
   isAuthenticated,
-
   updateProfile
 );
 

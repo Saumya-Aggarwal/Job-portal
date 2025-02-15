@@ -1,7 +1,9 @@
 import bcrypt from "bcryptjs";
 import UserModel from "../models/user.model.js";
 import jwt from "jsonwebtoken";
-export const  register = async (req, res) => {
+import getDataUri from "../utils/dataUri.js";
+import cloudinary from "../utils/cloudinary.js";
+export const register = async (req, res) => {
   try {
     const { fullName, email, password, phoneNumber, role } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -108,24 +110,59 @@ export const logout = async (req, res) => {
 export const updateProfile = async (req, res) => {
   try {
     const userId = req.user;
-    const { fullName, email, password, phoneNumber, profile } = req.body;
-
-    if (profile && typeof profile.skills === "string") {
-      profile.skills = profile.skills.split(",").map((skill) => skill.trim());
+    if (!userId) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
     }
-    const updateData = { fullName, email, password, phoneNumber, profile };
-    // Find user by ID and update with new data
+
+    // Extract fields from request body
+    const { fullName, email, phoneNumber, bio, skills } = req.body;
+
+    // Build the profile update object
+    const profile = {};
+
+    if (bio) {
+      profile.bio = bio;
+    }
+    if (skills) {
+      profile.skills = skills.split(",").map((skill) => skill.trim());
+    }
+    console.log(req.files);
+    // Check if a file is provided
+    const file = req.files?.file?.[0];
+    if (file) {
+      // Convert file to Data URI and upload to Cloudinary
+      const fileUri = getDataUri(file);
+      const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+      console.log("Cloudinary response:", cloudResponse);
+
+      // Add file-related data to the profile object
+      profile.resume = cloudResponse.secure_url;
+      profile.resumeOriginalName = file.originalname;
+    }
+
+    // Prepare the update data
+    // We include the profile only if it contains any updates.
+    const updateData = { fullName, email, phoneNumber };
+    if (Object.keys(profile).length > 0) {
+      updateData.profile = profile;
+    }
+
+    // Find the user by ID and update with the new data
     const updatedUser = await UserModel.findByIdAndUpdate(userId, updateData, {
-      new: true, // Return the updated document
-      runValidators: true, // Ensure validation rules are applied
+      new: true,
+      runValidators: true,
     });
+
     if (!updatedUser) {
       return res
         .status(404)
-        .json({ success: false, message: "User not found " });
+        .json({ success: false, message: "User not found" });
     }
+
+    // Return the updated user data
     res.status(200).json({ success: true, data: updatedUser });
   } catch (error) {
-    res.status(500).json({ success: false, message: "Server error", error });
+    console.error("Error in updateProfile:", error);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };

@@ -19,7 +19,6 @@ function SignUp() {
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm({
     defaultValues: {

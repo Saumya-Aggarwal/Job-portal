@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 function Navbar() {
-  const {user} = useSelector((store) => store.auth);
+  const { user } = useSelector((store) => store.auth);
   // State to track if the navbar should be visible
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -42,7 +42,9 @@ function Navbar() {
           {/* Logo */}
           <div>
             <h1 className="text-3xl font-bold">
-              Job <span className="text-[#F83002]">Portal</span>
+              <Link to={"/home"} className="cursor-pointer">
+                Job <span className="text-[#F83002]">Portal</span>
+              </Link>
             </h1>
           </div>
 

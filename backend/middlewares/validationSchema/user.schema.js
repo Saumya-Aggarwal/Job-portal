@@ -34,19 +34,12 @@ export const updateProfileSchema = z.object({
     .regex(/[0-9]/, "Password must contain at least one number")
     .optional(),
   phoneNumber: z
-    .number()
+    .string()
     .refine((val) => val.toString().length === 10, {
       message: "Phone number must be exactly 10 digits",
     })
     .optional(),
-  profile: z
-    .object({
-      bio: z.string().optional(),
-      skills: z.union([z.string(), z.array(z.string())]).optional(),
-      resume: z.string().optional(),
-      resumeOriginalName: z.string().optional(),
-      company: z.string().optional(),
-      Image: z.string().optional().default(""),
-    })
-    .optional(),
+  bio: z.string().optional(),
+  skills: z.union([z.string(), z.array(z.string())]).optional(),
+  resume: z.string().optional(),
 });

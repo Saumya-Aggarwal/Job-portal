@@ -51,7 +51,7 @@ function Navbar() {
           {/* Navigation Links */}
           <div>
             {user ? (
-              <LoggedUser />
+              <LoggedUser user = {user} />
             ) : (
               <div className="flex gap-3">
                 <Link to={"/login"}>

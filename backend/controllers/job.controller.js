@@ -111,39 +111,37 @@ export const deleteJob = async (req, res) => {
 //for students
 export const getAllJob = async (req, res) => {
   try {
-    // This creates a MongoDB query object that uses the $or operator to search
-    // for jobs where the title or description contains the keyword.
-    // $regex: This is a MongoDB operator for performing regular expression searches.
-    // $options: "i": This option makes the search case-insensitive,
-    // meaning it will match regardless of the case (uppercase or lowercase) of the keyword.
-    const keyword = req.query.keyword || "";
-    const query = {
-      $or: [
-        {
-          title: { $regex: keyword, $options: "i" },
-        },
-        {
-          description: { $regex: keyword, $options: "i" },
-        },
-      ],
-    };
+    const keyword = req.query.keyword;
+    let query = {};
+
+    // Only apply search filters if a keyword is provided
+    if (keyword) {
+      query = {
+        $or: [
+          { title: { $regex: keyword, $options: "i" } },
+          { description: { $regex: keyword, $options: "i" } },
+        ],
+      };
+    }
+
     const jobs = await JobModel.find(query)
       .populate("company")
       .populate("createdBy")
       .sort({ createdAt: -1 });
 
-    if (!jobs || jobs.length === 0) {
+    if (!jobs.length) {
       return res.status(404).json({
         message: "No jobs available",
         success: false,
       });
     }
-    return res.status(201).json({
+
+    return res.status(200).json({
       jobs,
       success: true,
     });
   } catch (e) {
-    return res.status(400).json({
+    return res.status(500).json({
       message: "Internal server error",
       success: false,
       error: e.message,

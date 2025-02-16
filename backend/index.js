@@ -10,7 +10,7 @@ import applicationRouter from "./routes/application.routes.js";
 dotenv.config({});
 const app = express();
 const corsOptions = {
-  origin: "http://localhost:5173", // Corrected URL
+  origin: "http://localhost:5174", // Corrected URL
   credentials: true,
 };
 

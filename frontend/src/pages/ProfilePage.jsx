@@ -56,10 +56,7 @@ function ProfilePage() {
         {/* Profile Header */}
         <div className="flex items-center gap-4 relative">
           <Avatar className="w-20 h-20">
-            <AvatarImage
-              src="https://github.com/shadcn.png"
-              alt="User Avatar"
-            />
+            <AvatarImage src={user.profile.profileImage} alt="User Avatar" />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
 

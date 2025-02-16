@@ -32,9 +32,8 @@ const userSchema = new mongoose.Schema(
       resume: { type: String },
       resumeOriginalName: { type: String },
       company: { type: mongoose.Schema.Types.ObjectId, ref: "Company" },
-      Image: {
+      profileImage: {
         type: String,
-        default: "",
       },
     },
   },

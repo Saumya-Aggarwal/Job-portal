@@ -6,6 +6,10 @@ import cloudinary from "../utils/cloudinary.js";
 export const register = async (req, res) => {
   try {
     const { fullName, email, password, phoneNumber, role } = req.body;
+    const profileImage = req.files?.profileImage?.[0];
+    const fileUri = getDataUri(profileImage);
+    const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await UserModel.create({
       fullName,
@@ -13,6 +17,9 @@ export const register = async (req, res) => {
       password: hashedPassword,
       phoneNumber,
       role,
+      profile: {
+        profileImage: cloudResponse.secure_url,
+      },
     });
     res.status(201).json({
       success: true,
@@ -114,52 +121,46 @@ export const updateProfile = async (req, res) => {
       return res.status(401).json({ success: false, message: "Unauthorized" });
     }
 
-    // Extract fields from request body
     const { fullName, email, phoneNumber, bio, skills } = req.body;
 
-    // Build the profile update object
-    const profile = {};
+    const existingUser = await UserModel.findById(userId);
+    if (!existingUser) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    const updatedProfile = { ...existingUser.profile.toObject() }; //doing this as to not to loose the pervious profile data like profile image
 
     if (bio) {
-      profile.bio = bio;
+      updatedProfile.bio = bio;
     }
     if (skills) {
-      profile.skills = skills.split(",").map((skill) => skill.trim());
+      updatedProfile.skills = skills.split(",").map((skill) => skill.trim());
     }
-    console.log(req.files);
-    // Check if a file is provided
+
+    // Handle file upload (resume)
     const file = req.files?.file?.[0];
     if (file) {
-      // Convert file to Data URI and upload to Cloudinary
       const fileUri = getDataUri(file);
       const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
-      console.log("Cloudinary response:", cloudResponse);
-
-      // Add file-related data to the profile object
-      profile.resume = cloudResponse.secure_url;
-      profile.resumeOriginalName = file.originalname;
+      updatedProfile.resume = cloudResponse.secure_url;
+      updatedProfile.resumeOriginalName = file.originalname;
     }
 
     // Prepare the update data
-    // We include the profile only if it contains any updates.
-    const updateData = { fullName, email, phoneNumber };
-    if (Object.keys(profile).length > 0) {
-      updateData.profile = profile;
-    }
+    const updateData = { 
+      fullName: fullName || existingUser.fullName,
+      email: email || existingUser.email,
+      phoneNumber: phoneNumber || existingUser.phoneNumber,
+      profile: updatedProfile, // Merged profile data
+    };
 
-    // Find the user by ID and update with the new data
-    const updatedUser = await UserModel.findByIdAndUpdate(userId, updateData, {
-      new: true,
-      runValidators: true,
-    });
+    // Update the user document
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      userId,
+      updateData,
+      { new: true, runValidators: true }
+    );
 
-    if (!updatedUser) {
-      return res
-        .status(404)
-        .json({ success: false, message: "User not found" });
-    }
-
-    // Return the updated user data
     res.status(200).json({ success: true, data: updatedUser });
   } catch (error) {
     console.error("Error in updateProfile:", error);

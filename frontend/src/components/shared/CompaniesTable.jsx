@@ -18,6 +18,8 @@ import { Edit2, MoreHorizontal } from "lucide-react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import useGetAllCompanies from "../../hooks/useGetAllCompanies.jsx";
+
+
 const CompaniesTable = () => {
   useGetAllCompanies();
   const { companies, searchCompanyByText } = useSelector(

@@ -8,21 +8,28 @@ function useGetCompanyById(id) {
 
   useEffect(() => {
     if (!id) return;
-
-    const fetchJob = async () => {
+    
+    let isMounted = true;
+    const fetchCompany = async () => {
       try {
         const res = await axios.get(`${COMPANY_API_END_POINT}/${id}`, {
           withCredentials: true,
         });
-        if (res.data.success) {
+        if (isMounted && res.data.success) {
           dispatch(setSingleCompany(res.data.company));
         }
       } catch (error) {
-        console.log("Error fetching Company:", error);
+        if (isMounted) {
+          console.log("Error fetching Company:", error);
+        }
       }
     };
 
-    fetchJob();
+    fetchCompany();
+    
+    return () => {
+      isMounted = false;
+    };
   }, [id, dispatch]);
 
   return null;

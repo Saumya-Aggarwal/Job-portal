@@ -8,7 +8,8 @@ import { COMPANY_API_END_POINT } from "../../utils/const.js"
 import { useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { useSelector } from 'react-redux'
-import useGetCompanyById  from '../../hooks/useGetCompanyById.jsx'
+import useGetCompanyById from '../../hooks/useGetCompanyById.jsx'
+
 const CompanySetup = () => {
     const params = useParams();
     useGetCompanyById(params.id);
@@ -19,7 +20,7 @@ const CompanySetup = () => {
         location: "",
         file: null
     });
-    const {singleCompany} = useSelector(store=>store.company);
+    const { singleCompany } = useSelector(store => store.company);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
@@ -56,21 +57,24 @@ const CompanySetup = () => {
             }
         } catch (error) {
             console.log(error);
-            toast.error(error.response.data.message);
+            toast.error(error.response?.data?.message || "Error updating company");
         } finally {
             setLoading(false);
         }
     }
 
+    // Fix: Add null check before accessing singleCompany properties
     useEffect(() => {
-        setInput({
-            name: singleCompany.name || "",
-            description: singleCompany.description || "",
-            website: singleCompany.website || "",
-            location: singleCompany.location || "",
-            file: singleCompany.file || null
-        })
-    },[singleCompany]);
+        if (singleCompany) {
+            setInput({
+                name: singleCompany.name || "",
+                description: singleCompany.description || "",
+                website: singleCompany.website || "",
+                location: singleCompany.location || "",
+                file: null // Don't set file from API as it would be a URL, not a File object
+            });
+        }
+    }, [singleCompany]);
 
     return (
         <div>
@@ -83,6 +87,8 @@ const CompanySetup = () => {
                         </Button>
                         <h1 className='font-bold text-xl'>Company Setup</h1>
                     </div>
+                    
+                    {/* Rest of your form stays the same */}
                     <div className='grid grid-cols-2 gap-4'>
                         <div>
                             <Label>Company Name</Label>
@@ -129,12 +135,15 @@ const CompanySetup = () => {
                             />
                         </div>
                     </div>
-                    {
-                        loading ? <Button className="w-full my-4"> <Loader2 className='mr-2 h-4 w-4 animate-spin' /> Please wait </Button> : <Button type="submit" className="w-full my-4">Update</Button>
+                    
+                    {loading ? 
+                        <Button className="w-full my-4"> 
+                            <Loader2 className='mr-2 h-4 w-4 animate-spin' /> Please wait 
+                        </Button> : 
+                        <Button type="submit" className="w-full my-4">Update</Button>
                     }
                 </form>
             </div>
-
         </div>
     )
 }

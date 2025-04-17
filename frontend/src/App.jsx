@@ -11,6 +11,7 @@ import JobDescriptionPage from "./pages/JobDescriptionPage";
 import CompaniesPage from "./pages/admin/companiesPage";
 import CreateCompanyPage from "./pages/admin/CreateCompanyPage";
 import CompanySetupPage from "./pages/admin/CompanySetupPage";
+import AdminJobPage from "./pages/admin/AdminJobPage";
 
 function App() {
   const router = createBrowserRouter([
@@ -28,6 +29,7 @@ function App() {
         {path: "/admin/companies", element: <CompaniesPage />},
         {path: "/admin/companies/create", element: <CreateCompanyPage />},
         {path: "/admin/companies/:id", element: <CompanySetupPage />},
+        {path: "/admin/jobs", element: <AdminJobPage />},
 
       ],
     },

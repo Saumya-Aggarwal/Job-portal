@@ -13,6 +13,7 @@ import {
   getCompanies,
   getCompanyById,
 } from "../controllers/company.controller.js";
+import { uploadMiddleware } from "../middlewares/multer.js";
 
 const companyRouter = express.Router();
 
@@ -27,6 +28,7 @@ companyRouter.post(
 );
 companyRouter.put(
   "/update/:id",
+  uploadMiddleware,
   validateRequest(updateCompanySchema),
   updateCompany
 );

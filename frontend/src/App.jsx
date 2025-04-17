@@ -8,6 +8,9 @@ import BrowsePage from "./pages/BrowsePage";
 import ProfilePage from "./pages/ProfilePage";
 import { Toaster } from "@/components/ui/toaster";
 import JobDescriptionPage from "./pages/JobDescriptionPage";
+import CompaniesPage from "./pages/admin/companiesPage";
+import CreateCompanyPage from "./pages/admin/CreateCompanyPage";
+import CompanySetupPage from "./pages/admin/CompanySetupPage";
 
 function App() {
   const router = createBrowserRouter([
@@ -21,6 +24,11 @@ function App() {
         { path: "browse", element: <BrowsePage /> },
         { path: "profile", element: <ProfilePage /> },
         { path: "description/:id", element: <JobDescriptionPage /> },
+        //admin routes
+        {path: "/admin/companies", element: <CompaniesPage />},
+        {path: "/admin/companies/create", element: <CreateCompanyPage />},
+        {path: "/admin/companies/:id", element: <CompanySetupPage />},
+
       ],
     },
     { path: "/login", element: <Login /> },

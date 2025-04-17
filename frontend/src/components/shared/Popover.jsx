@@ -15,7 +15,7 @@ import { useToast } from "@/components/hooks/use-toast";
 import axios from "axios";
 import { USER_API_END_POINT } from "../../utils/const";
 
-function LoggedUser({user}) {
+function LoggedUser({ user }) {
   const dispatch = useDispatch();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -25,13 +25,13 @@ function LoggedUser({user}) {
         withCredentials: true,
       });
       if (response.data.success) {
-        dispatch(logout());         
+        dispatch(logout());
         toast({
           title: "Logout Successful",
           description: "You have been successfully logged out.",
           variant: "default",
         });
-        navigate("/")
+        navigate("/");
       }
     } catch (error) {
       console.log(error);
@@ -41,20 +41,33 @@ function LoggedUser({user}) {
 
   return (
     <ul className="flex gap-5 font-medium items-center">
-      <Link to="/home">
-        <li>Home</li>
-      </Link>
-      <Link to="/jobs">
-        <li>Jobs</li>
-      </Link>
-      <Link to="/browse">
-        <li>Browse</li>
-      </Link>
+      {user && user.role === "recruiter" ? (
+        <>
+          <Link to="/admin/companies">
+            <li>Companies</li>
+          </Link>
+          <Link to="/admin/jobs">
+            <li>Jobs</li>
+          </Link>
+        </>
+      ) : (
+        <>
+          <Link to="/home">
+            <li>Home</li>
+          </Link>
+          <Link to="/jobs">
+            <li>Jobs</li>
+          </Link>
+          <Link to="/browse">
+            <li>Browse</li>
+          </Link>
+        </>
+      )}
 
       <Popover>
         <PopoverTrigger>
           <Avatar className="ms-6 cursor-pointer">
-            <AvatarImage src= {user.profile.profileImage} />
+            <AvatarImage src={user.profile.profileImage} />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
         </PopoverTrigger>
@@ -62,7 +75,7 @@ function LoggedUser({user}) {
         <PopoverContent className="w-80 p-4">
           <div className="flex gap-4 items-center">
             <Avatar>
-              <AvatarImage src= {user.profile.profileImage} />
+              <AvatarImage src={user.profile.profileImage} />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <div>
@@ -74,15 +87,17 @@ function LoggedUser({user}) {
           </div>
 
           <div className="flex justify-center mt-4 gap-5">
-            <Link to="/profile">
-              <Button
-                variant="link"
-                className="text-md flex items-center gap-2"
-              >
-                <FaUser />
-                View Profile
-              </Button>
-            </Link>
+            {user.role === "recruiter" ? null : (
+              <Link to="/profile">
+                <Button
+                  variant="link"
+                  className="text-md flex items-center gap-2"
+                >
+                  <FaUser />
+                  View Profile
+                </Button>
+              </Link>
+            )}
 
             <Button
               variant="link"

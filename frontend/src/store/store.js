@@ -1,6 +1,7 @@
 import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "./authSlice";
 import jobReducer from "./jobSlice";
+import companyReducer from "./companySlice"; 
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage"; // defaults to localStorage
 import { combineReducers } from "redux";
@@ -15,6 +16,7 @@ const persistConfig = {
 const rootReducer = combineReducers({
   auth: authReducer,
   job: jobReducer,
+  company : companyReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

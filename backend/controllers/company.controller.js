@@ -1,9 +1,10 @@
 import CompanyModel from "../models/company.model.js";
-
+import getDataUri from "../utils/dataUri.js";
+import cloudinary from "../utils/cloudinary.js";
 export const registerCompany = async (req, res) => {
   try {
     const userId = req.user;
-    const { name, website, description, location, logo } = req.body;
+    const { name, website, description, location } = req.body;
     const Exist = await CompanyModel.findOne({ userId, name });
     if (Exist) {
       return res.status(401).json({
@@ -12,12 +13,12 @@ export const registerCompany = async (req, res) => {
         company: Exist,
       });
     }
+
     const company = await CompanyModel.create({
       name,
       website,
       description,
       location,
-      logo,
       userId,
     });
     if (!company) {
@@ -118,19 +119,38 @@ export const updateCompany = async (req, res) => {
   try {
     const userId = req.user;
     const companyId = req.params.id;
-    const updatedData = req.body;
+    const updatedData = { ...req.body };
+
+    // Process file upload if present
+    if (req.files?.file && req.files.file.length > 0) {
+      const fileUri = getDataUri(req.files.file[0]);
+      const cloudResponse = await cloudinary.uploader.upload(fileUri.content);
+      // Add the logo URL to the updatedData object
+      updatedData.logo = cloudResponse.secure_url;
+    }
+
     const updatedCompany = await CompanyModel.findByIdAndUpdate(
       companyId,
       updatedData,
       { new: true, runValidators: true }
     );
+
     if (!updatedCompany) {
       return res
         .status(404)
-        .json({ success: false, message: "company not found " });
+        .json({ success: false, message: "Company not found" });
     }
-    res.status(200).json({ success: true, updatedCompany });
+
+    return res.status(200).json({
+      success: true,
+      message: "Company updated successfully",
+      company: updatedCompany,
+    });
   } catch (error) {
-    res.status(500).json({ success: false, message: "Server error", error });
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
+      error: error.message,
+    });
   }
 };

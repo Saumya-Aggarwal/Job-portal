@@ -153,7 +153,14 @@ export const getAllJob = async (req, res) => {
 export const getJobById = async (req, res) => {
   try {
     const jobId = req.params.id;
-    const job = await JobModel.findById(jobId);
+    const job = await JobModel.findById(jobId)
+      .populate({
+        path: 'applications',
+        populate: {
+          path: 'applicant',
+          select: '_id' // Just get the IDs to keep the response small
+        }
+      });
 
     if (!job) {
       return res.status(404).json({
@@ -161,12 +168,12 @@ export const getJobById = async (req, res) => {
         success: false,
       });
     }
-    return res.status(201).json({
+    return res.status(200).json({
       job,
       success: true,
     });
   } catch (e) {
-    return res.status(400).json({
+    return res.status(500).json({
       message: "Internal server error",
       success: false,
       error: e.message,

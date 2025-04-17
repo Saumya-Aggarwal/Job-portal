@@ -3,16 +3,19 @@ import { useEffect } from "react";
 import { APPLICATION_API_END_POINT } from "../utils/const";
 import { toast } from "sonner";
 
-function useApplyJob(id) { 
+function useApplyJob(id) {
   useEffect(() => {
     const applyJob = async () => {
       try {
-        const res = await axios.get(`${APPLICATION_API_END_POINT}/apply/${id}`);
+        const res = await axios.get(
+          `${APPLICATION_API_END_POINT}/apply/${id}`,
+          { withCredentials: true }
+        );
         if (res.data.success) {
           toast.success("Applied Successfully");
           useGetJobById(id);
         } else {
-          toast.error("Failed to apply"); 
+          toast.error("Failed to apply");
         }
       } catch (error) {
         console.log(error);

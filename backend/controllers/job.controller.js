@@ -60,6 +60,7 @@ export const createJob = async (req, res) => {
     });
   }
 };
+
 export const getJobsCreated = async (req, res) => {
   try {
     const adminId = req.user;
@@ -84,6 +85,7 @@ export const getJobsCreated = async (req, res) => {
     });
   }
 };
+
 export const deleteJob = async (req, res) => {
   try {
     const jobId = req.params.id;
@@ -107,7 +109,6 @@ export const deleteJob = async (req, res) => {
     });
   }
 };
-
 //for students
 export const getAllJob = async (req, res) => {
   try {
@@ -152,16 +153,16 @@ export const getAllJob = async (req, res) => {
 export const getJobById = async (req, res) => {
   try {
     const jobId = req.params.id;
-    const jobs = await JobModel.findById(jobId);
+    const job = await JobModel.findById(jobId);
 
-    if (!jobs) {
+    if (!job) {
       return res.status(404).json({
         message: "job not found",
         success: false,
       });
     }
     return res.status(201).json({
-      jobs,
+      job,
       success: true,
     });
   } catch (e) {

@@ -9,21 +9,33 @@ import { setHomeSearchJobByText } from "../store/jobSlice";
 
 function Home() {
   const user = useSelector((store) => store.auth.user);
+  const { allJobs, jobError } = useSelector((store) => store.job);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { isLoading } = useGetAllJobs();
+  
   useEffect(() => {
     dispatch(setHomeSearchJobByText(""));
     if (user && user.role === "recruiter") {
-      navigate("/admin/companies");  // Correct - calling the function
+      navigate("/admin/companies");
     }
-  }, [user, navigate]);
-  // Fetch all jobs when the component mounts
-  useGetAllJobs();
+  }, [user, navigate, dispatch]);
+  
   return (
     <>
       <HeroSection />
       <CategoryCarousel />
-      <LatestJob />
+      {isLoading ? (
+        <div className="text-center my-10">
+          <p className="text-lg">Loading jobs...</p>
+        </div>
+      ) : jobError ? (
+        <div className="text-center my-10">
+          <p className="text-lg text-red-500">{jobError}</p>
+        </div>
+      ) : (
+        <LatestJob />
+      )}
     </>
   );
 }

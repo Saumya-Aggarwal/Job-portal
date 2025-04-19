@@ -2,5 +2,17 @@
   "outputDirectory": "frontend/dist",
   "buildCommand": "npm run build",
   "installCommand": "npm install",
-  "framework": "vite"
+  "framework": "vite",
+  "version": 2,
+  "builds": [
+    { "src": "frontend/dist/**", "use": "@vercel/static" },
+    { "src": "backend/index.js", "use": "@vercel/node" }
+  ],
+  "routes": [
+    { "src": "/job/(.*)", "dest": "backend/index.js" },
+    { "src": "/application/(.*)", "dest": "backend/index.js" },
+    { "src": "/user/(.*)", "dest": "backend/index.js" },
+    { "src": "/company/(.*)", "dest": "backend/index.js" },
+    { "src": "/(.*)", "dest": "frontend/dist/$1" }
+  ]
 }

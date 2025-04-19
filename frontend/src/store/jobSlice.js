@@ -1,19 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { all } from "axios";
 
 const initialState = {
   allJobs: [],
   allAdminJobs: [],
+  appliedJobs: [],
   singleJob: null,
   searchJobByText: "",
-  jobError: null, // Add this line
+  jobError: null, 
+  homeSearchJobByText: "",
 };
 
 const jobSlice = createSlice({
   name: "job",
   initialState,
   reducers: {
-    //actions
     setAllJobs: (state, action) => {
       state.allJobs = action.payload;
     },
@@ -29,8 +29,22 @@ const jobSlice = createSlice({
     setJobError: (state, action) => {
       state.jobError = action.payload;
     },
+    setAppliedJobs: (state, action) => {
+      state.appliedJobs = action.payload;
+    },
+    setHomeSearchJobByText: (state, action) => {
+      state.homeSearchJobByText = action.payload;
+    },
   },
 });
 
-export const { setAllJobs, setSingleJob, setAllAdminJobs, setSearchJobByText, setJobError } = jobSlice.actions;
+export const {
+  setAllJobs,
+  setSingleJob,
+  setAllAdminJobs,
+  setSearchJobByText,
+  setJobError,
+  setAppliedJobs,
+  setHomeSearchJobByText
+} = jobSlice.actions;
 export default jobSlice.reducer;

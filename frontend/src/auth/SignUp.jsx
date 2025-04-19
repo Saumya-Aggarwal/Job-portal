@@ -57,7 +57,6 @@ function SignUp() {
       const res = await axios.post(`${USER_API_END_POINT}/register`, formData, {
         withCredentials: true,
       });
-      console.log("Response:", res.data);
       if (res.data.success) {
         toast.success(res.data.message);
         navigate("/login");

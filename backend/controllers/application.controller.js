@@ -78,10 +78,17 @@ export const getAppliedJob = async (req, res) => {
         success: false,
       });
     }
+
+    // Map applications to include job details and status
+    const jobsWithStatus = applications.map((application) => ({
+      job: application.job,
+      status: application.status, // Include the status of the application
+    }));
+
     return res.status(200).json({
       success: true,
       applications,
-      jobs: applications.map((application) => application.job),
+      jobs: jobsWithStatus, // Return jobs with status
     });
   } catch (error) {
     return res.status(500).json({
@@ -93,7 +100,6 @@ export const getAppliedJob = async (req, res) => {
 };
 export const getApplicants = async (req, res) => {
   try {
-    const userId = req.user;
     const jobId = req.params.id;
 
     const applications = await ApplicationModel.find({ job: jobId })
@@ -110,7 +116,11 @@ export const getApplicants = async (req, res) => {
     return res.status(200).json({
       success: true,
       job: applications[0].job,
-      applicants: applications.map((application) => application.applicant),
+      applicants: applications.map((application) => ({
+        applicationId: application._id, 
+        applicant: application.applicant,
+        status: application.status // Include application status
+      })),
     });
   } catch (error) {
     return res.status(500).json({
@@ -170,7 +180,7 @@ export const updateStatus = async (req, res) => {
         .status(404)
         .json({ message: "Application not found", success: false });
     }
-    application.status = status;
+    application.status = status.toLowerCase(); 
     await application.save();
     return res.status(200).json({
       message: "Application status updated successfully",

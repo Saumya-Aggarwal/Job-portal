@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { set } from "react-hook-form";
 
 const authSlice = createSlice({
   name: "auth",

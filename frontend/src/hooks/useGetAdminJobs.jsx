@@ -15,7 +15,7 @@ function useGetAdminJobs() {
         });
         
         if (res.data.success) {
-          dispatch(setAllAdminJobs(res.data.jobs));
+          dispatch(setAllAdminJobs(res.data.jobsCreated));
           dispatch(setJobError(null)); // Clear any previous errors
         } else {
           dispatch(setJobError(res.data.message));

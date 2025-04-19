@@ -6,7 +6,10 @@
   "type": "module",
   "scripts": {
     "test": "npm test",
-    "dev": " nodemon index.js"
+    "dev": " npx nodemon backend/index.js",
+    "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend",
+    "start": "nodemon backend/index.js"
+
   },
   "author": "saumya",
   "license": "ISC",

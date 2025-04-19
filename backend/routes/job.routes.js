@@ -5,6 +5,7 @@ import {
   getAllJob,
   getJobById,
   getJobsCreated,
+  updateJob,
 } from "../controllers/job.controller.js";
 import { createJobSchema, validateRequest } from "../middlewares/validation.js";
 import isAuthenticated from "../middlewares/auth.js";
@@ -16,6 +17,12 @@ jobRouter.post(
   isRecruiter,
   validateRequest(createJobSchema),
   createJob
+);
+jobRouter.put(
+  "/update/:id",
+  isRecruiter,
+  validateRequest(createJobSchema),
+  updateJob
 );
 jobRouter.get("/created", isRecruiter, getJobsCreated);
 jobRouter.get("/all", getAllJob);

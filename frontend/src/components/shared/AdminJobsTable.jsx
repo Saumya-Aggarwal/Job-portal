@@ -52,7 +52,7 @@ const AdminJobsTable = () => {
         <p className="text-gray-500 mt-2">{jobError}</p>
         <button
           className="mt-4 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90"
-          onClick={() => navigate("/admin/jobs/create")}
+          onClick={() => navigate("/admin/job/create")}
         >
           Create a Job
         </button>
@@ -105,7 +105,7 @@ const AdminJobsTable = () => {
                   </PopoverTrigger>
                   <PopoverContent className="w-32">
                     <div
-                      onClick={() => navigate(`/admin/companies/${job._id}`)}
+                      onClick={() => navigate(`/admin/job/edit/${job._id}`)}
                       className="flex items-center gap-2 w-fit cursor-pointer"
                     >
                       <Edit2 className="w-4" />
@@ -113,7 +113,7 @@ const AdminJobsTable = () => {
                     </div>
                     <div
                       onClick={() =>
-                        navigate(`/admin/jobs/${job._id}/applicants`)
+                        navigate(`/admin/job/${job._id}/applicants`)
                       }
                       className="flex items-center w-fit gap-2 cursor-pointer mt-2"
                     >

@@ -141,7 +141,7 @@ function ProfilePage() {
         <h2 className="text-2xl font-semibold">
           <span className="border-b-2">Applied Jobs</span>
         </h2>
-        <AppliedJobTable userRole="recruiter" />
+        <AppliedJobTable/>
       </div>
       <UpdateProfileModal open={open} setOpen={setOpen} />
     </>

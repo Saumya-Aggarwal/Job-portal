@@ -8,7 +8,7 @@ import BrowsePage from "./pages/BrowsePage";
 import ProfilePage from "./pages/ProfilePage";
 import { Toaster } from "@/components/ui/toaster";
 import JobDescriptionPage from "./pages/JobDescriptionPage";
-import CompaniesPage from "./pages/admin/companiesPage";
+import CompaniesPage from "./pages/admin/CompaniesPage";
 import CreateCompanyPage from "./pages/admin/CreateCompanyPage";
 import CompanySetupPage from "./pages/admin/CompanySetupPage";
 import AdminJobPage from "./pages/admin/AdminJobPage";

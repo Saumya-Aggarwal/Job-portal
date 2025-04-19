@@ -18,7 +18,11 @@ dotenv.config();
 const app = express();
 
 const corsOptions = {
-  origin: ["http://localhost:5173", "https://your-vercel-app-name.vercel.app"],
+  origin: [
+    "https://job-portal-git-main-saumya-aggarwals-projects.vercel.app",
+    "https://job-portal-saumya-aggarwals-projects.vercel.app",
+    "https://job-portal-beta-one.vercel.app",
+  ],
   credentials: true,
 };
 
@@ -44,13 +48,15 @@ try {
   const fs = await import("fs");
   if (fs.existsSync(frontendPath)) {
     app.use(express.static(frontendPath));
-    
+
     // Catch-all route to serve index.html
     app.get("*", (req, res) => {
       res.sendFile(path.join(frontendPath, "index.html"));
     });
   } else {
-    console.warn(`Warning: Frontend build directory not found at ${frontendPath}`);
+    console.warn(
+      `Warning: Frontend build directory not found at ${frontendPath}`
+    );
   }
 } catch (err) {
   console.error("Error setting up static file serving:", err);

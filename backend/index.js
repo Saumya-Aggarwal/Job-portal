@@ -18,11 +18,7 @@ dotenv.config();
 const app = express();
 
 const corsOptions = {
-  origin: [
-    "https://job-portal-git-main-saumya-aggarwals-projects.vercel.app",
-    "https://job-portal-saumya-aggarwals-projects.vercel.app",
-    "https://job-portal-beta-one.vercel.app",
-  ],
+  origin: [" https://job-portal-08im.onrender.com/"],
   credentials: true,
 };
 

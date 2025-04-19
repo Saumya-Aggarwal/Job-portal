@@ -1,6 +1,6 @@
 // Use absolute URLs in production, relative URLs in development
-const isProduction = window.location.hostname !== 'localhost';
-const API_BASE = isProduction ? 'https://job-portal-beta-one.vercel.app' : '';
+
+const API_BASE = 'https://job-portal-08im.onrender.com/'
 
 export const JOB_API_END_POINT = `${API_BASE}/job`;
 export const APPLICATION_API_END_POINT = `${API_BASE}/application`;

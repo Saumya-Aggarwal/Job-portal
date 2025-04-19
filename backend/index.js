@@ -18,7 +18,7 @@ dotenv.config();
 const app = express();
 
 const corsOptions = {
-  origin: [" https://job-portal-08im.onrender.com/"],
+  origin: " https://job-portal-08im.onrender.com/",
   credentials: true,
 };
 
